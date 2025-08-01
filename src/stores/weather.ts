@@ -1,18 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { type Weather } from '@/types/weather.interface'
+import { type Location, type Weather } from '@/types/weather.interface'
 import { useWeatherApi } from '@/composables/useWeatherApi'
 
 export const useWeatherStore = defineStore(
   'weather',
   () => {
+    const locationList = ref<Array<Location>>([])
     const weatherList = ref<Array<Weather>>([])
+
     const { getLocation, getWeather, getWeatherInfo } = useWeatherApi()
 
     const addWeather = async (location: string) => {
       try {
         const locationData = await getLocation(location)
-        const weatherData = await getWeather(locationData.latitude, locationData.longitude)
+        const weatherData = await getWeather({id: locationData.id ,name: locationData.name, latitude: locationData.latitude, longitude: locationData.longitude})
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
         const newWeather: Weather = {
@@ -25,6 +27,7 @@ export const useWeatherStore = defineStore(
           icon: weatherInfo.icon,
         }
 
+        locationList.value.unshift({id: locationData.id, name: locationData.name, latitude: locationData.latitude, longitude: locationData.longitude})
         weatherList.value.unshift(newWeather)
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : 'Failed to add weather')
@@ -32,17 +35,18 @@ export const useWeatherStore = defineStore(
     }
 
     const removeWeather = (id: number) => {
-      const index = weatherList.value.findIndex((weather) => weather.id === id)
-      if (index > -1) weatherList.value.splice(index, 1)
+      const index = locationList.value.findIndex((weather) => weather.id === id)
+      if (index > -1) locationList.value.splice(index, 1)
     }
 
     return {
+      locationList,
       weatherList,
       addWeather,
       removeWeather,
     }
   },
   {
-    persist: true,
+    persist: {pick: ['locationList']},
   },
 )

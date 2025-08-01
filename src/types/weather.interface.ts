@@ -7,3 +7,10 @@ export interface Weather {
   minTemp: number
   icon: string
 }
+
+export interface Location {
+  id: number
+  name: string
+  latitude: number
+  longitude: number
+}
