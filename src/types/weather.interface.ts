@@ -5,4 +5,5 @@ export interface Weather {
   temperature: number
   maxTemp: number
   minTemp: number
+  icon: string
 }

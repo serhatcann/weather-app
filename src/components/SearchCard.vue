@@ -7,15 +7,15 @@ const weatherStore = useWeatherStore()
 const searchLocation = ref('')
 const errorMessage = ref('')
 
-const addLocation = () => {
+const addLocation = async () => {
   if (!searchLocation.value.trim()) return
 
   try {
     errorMessage.value = ''
-    weatherStore.addWeather(searchLocation.value)
+    await weatherStore.addWeather(searchLocation.value)
     searchLocation.value = ''
   } catch (error) {
-    errorMessage.value = 'Failed to add location: ' + error || 'Unknown error'
+    errorMessage.value = error instanceof Error ? error.message : 'Unknown error'
   }
 }
 </script>
