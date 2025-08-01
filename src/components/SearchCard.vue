@@ -1,39 +1,24 @@
 <script setup lang="ts">
 import AppCard from './AppCard.vue'
-import { type Weather } from '@/types/weather.interface'
+import { useWeatherStore } from '@/stores/weather'
 import { ref } from 'vue'
 
-const emit = defineEmits<{
-  addWeather: [weather: Weather]
-}>()
-
+const weatherStore = useWeatherStore()
 const searchLocation = ref('')
 const errorMessage = ref('')
 
-const addLocation = async () =>
+const addLocation = () =>
 {
   if (!searchLocation.value.trim()) return
 
   try
   {
     errorMessage.value = ''
-
-    const newWeather: Weather = {
-      id: Date.now(),
-      location: searchLocation.value,
-      temperature: 75,
-      condition: 'Sunny',
-      maxTemp: 80,
-      minTemp: 70,
-    }
-
-    emit('addWeather', newWeather)
+    weatherStore.addWeather(searchLocation.value)
     searchLocation.value = ''
   } catch (error)
   {
-    errorMessage.value = 'Failed to add location'
-    console.log(error);
-
+    errorMessage.value = 'Failed to add location: ' + error || 'Unknown error'
   }
 }
 </script>
