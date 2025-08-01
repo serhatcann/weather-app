@@ -1,30 +1,36 @@
 <script setup lang="ts">
 import AppCard from './AppCard.vue'
 import { type Weather } from '@/types/weather.interface'
+import { useWeatherStore } from '@/stores/weather'
+
+const weatherStore = useWeatherStore()
 
 const props = defineProps<{
   weather: Weather
 }>()
+
+const removeWeather = () =>
+{
+  weatherStore.removeWeather(props.weather.id)
+}
 </script>
 
 <template>
   <AppCard :title="props.weather.location">
+    <button @click="removeWeather"
+      class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl font-bold">X</button>
     <div class="flex items-center justify-between">
-      <!-- Left side: Weather info -->
-      <div class="flex-1">
-        <p class="text-lg font-medium mb-2">{{ props.weather.condition }}</p>
-        <p class="text-3xl font-bold mb-2">{{ props.weather.temperature }}°</p>
-        <div class="flex gap-4 text-sm text-gray-600">
+      <div class="flex flex-1/2 flex-col gap-2">
+        <p class="text-lg font-medium">{{ props.weather.condition }}</p>
+        <p class="text-3xl font-bold">{{ props.weather.temperature }}°</p>
+        <div class="flex gap-2 text-sm text-gray-600">
           <span>Max: {{ props.weather.maxTemp }}°</span>
+          -
           <span>Min: {{ props.weather.minTemp }}°</span>
         </div>
       </div>
-
-      <!-- Right side: Weather icon placeholder -->
-      <div class="flex-shrink-0 ml-6">
-        <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-          <weather-icon />
-        </div>
+      <div class="flex-1/2 flex items-center justify-start">
+        <div class="w-32 h-32 bg-gray-200 rounded-lg" />
       </div>
     </div>
   </AppCard>

@@ -98,8 +98,14 @@ export const useWeatherStore = defineStore('weather', () => {
     weatherList.value.unshift(newWeather)
   }
 
+  const removeWeather = (id: number) => {
+    const index = weatherList.value.findIndex(weather => weather.id === id)
+    if (index > -1) weatherList.value.splice(index, 1)
+  }
+
   return {
     weatherList,
     addWeather,
+    removeWeather
   }
 })
