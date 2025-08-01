@@ -2,5 +2,5 @@
 </script>
 
 <template>
-HOME
+FORECAST
 </template>
