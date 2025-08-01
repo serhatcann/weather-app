@@ -16,16 +16,19 @@ export const useWeatherApi = () => {
       }
 
       const data = await response.json()
+
       if (data.error) {
         throw new Error(data.reason || 'Geocoding API error')
       }
+
       if (!data.results?.length) {
         throw new Error('Location not found')
       }
 
       return data.results[0]
     } catch (error) {
-      console.log('Failed to fetch location data:', error)
+      console.log(error)
+      throw new Error('Failed to fetch location data')
     }
   }
 
@@ -46,16 +49,19 @@ export const useWeatherApi = () => {
       }
 
       const data = await response.json()
+
       if (data.error) {
         throw new Error(data.reason || 'Weather API error')
       }
+
       if (!data.current || !data.daily) {
         throw new Error('Incomplete weather data received')
       }
 
       return data
     } catch (error) {
-      console.log('Failed to fetch weather data: ', error)
+      console.log(error)
+      throw new Error('Failed to fetch weather data')
     }
   }
 

@@ -27,7 +27,7 @@ export const useWeatherStore = defineStore(
 
         weatherList.value.unshift(newWeather)
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : 'Failed to fetch weather data')
+        throw new Error(error instanceof Error ? error.message : 'Failed to add weather')
       }
     }
 
