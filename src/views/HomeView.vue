@@ -2,9 +2,11 @@
 import AppLayout from '@/layouts/AppLayout.vue'
 import AppCard from '@/components/AppCard.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
+import SearchCard from '@/components/SearchCard.vue'
 import { type Weather } from '@/types/weather.interface'
+import { ref } from 'vue'
 
-const weatherList: Array<Weather> = [
+const weatherList = ref<Array<Weather>>([
   {
     id: 0,
     location: 'New York',
@@ -85,17 +87,21 @@ const weatherList: Array<Weather> = [
     maxTemp: 80,
     minTemp: 70,
   },
-]
+])
+
+const handleAddWeather = (weather: Weather) =>
+{
+  weatherList.value.push(weather)
+}
 </script>
 
 <template>
   <AppLayout title="Weather Search">
     <div class="mb-6">
-      <AppCard title="Search"> </AppCard>
+      <SearchCard @add-weather="handleAddWeather" />
     </div>
     <AppCard title="Results" v-if="weatherList.length > 0" class="flex flex-col gap-2">
-      <WeatherCard :weather="weather" v-for="weather of weatherList" :key="weather.id">
-      </WeatherCard>
+      <WeatherCard :weather="weather" v-for="weather of weatherList.reverse()" :key="weather.id" />
     </AppCard>
   </AppLayout>
 </template>
