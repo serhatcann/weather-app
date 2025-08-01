@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   title: string
 }>()
 </script>
@@ -10,7 +10,7 @@ defineProps<{
       <div class="max-w-md mx-auto px-4 py-4 sm:max-w-2xl lg:max-w-4xl">
         <div class="flex items-center justify-between">
           <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">
-            {{ title }}
+            {{ props.title }}
           </h1>
         </div>
       </div>

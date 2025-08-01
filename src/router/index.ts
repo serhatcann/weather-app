@@ -15,10 +15,10 @@ const router = createRouter({
       path: FORECAST.PATH,
       component: () => import('../views/ForecastView.vue'),
     },
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: HOME.PATH,
-  },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: HOME.PATH,
+    },
   ],
 })
 
