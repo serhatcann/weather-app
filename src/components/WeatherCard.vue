@@ -19,7 +19,7 @@ const removeWeather = () =>
   <AppCard :title="props.weather.location">
     <button @click="removeWeather"
       class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl font-bold">X</button>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-center">
       <div class="flex flex-1/2 flex-col gap-2">
         <p class="text-lg font-medium">{{ props.weather.condition }}</p>
         <p class="text-3xl font-bold">{{ props.weather.temperature }}°</p>
