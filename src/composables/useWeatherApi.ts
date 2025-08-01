@@ -1,18 +1,62 @@
 export const useWeatherApi = () => {
   const getLocation = async (location: string) => {
-    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1`)
-    const data = await response.json()
+    try {
+      const response = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1`,
+      )
 
-    if (!data.results?.length) {
-      throw new Error('Location not found')
+      if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error('Invalid location name')
+        }
+        if (response.status >= 500) {
+          throw new Error('Geocoding service temporarily unavailable')
+        }
+        throw new Error('Failed to search location')
+      }
+
+      const data = await response.json()
+      if (data.error) {
+        throw new Error(data.reason || 'Geocoding API error')
+      }
+      if (!data.results?.length) {
+        throw new Error('Location not found')
+      }
+
+      return data.results[0]
+    } catch (error) {
+      console.log('Failed to fetch location data:', error)
     }
-
-    return data.results[0]
   }
 
   const getWeather = async (latitude: number, longitude: number) => {
-    const response = await fetch(`https://api.open-meteo.com/v1/dwd-icon?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)
-    return await response.json()
+    try {
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/dwd-icon?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`,
+      )
+
+      if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error('Invalid coordinates provided')
+        }
+        if (response.status >= 500) {
+          throw new Error('Weather service temporarily unavailable')
+        }
+        throw new Error('Failed to fetch weather data')
+      }
+
+      const data = await response.json()
+      if (data.error) {
+        throw new Error(data.reason || 'Weather API error')
+      }
+      if (!data.current || !data.daily) {
+        throw new Error('Incomplete weather data received')
+      }
+
+      return data
+    } catch (error) {
+      console.log('Failed to fetch weather data: ', error)
+    }
   }
 
   const getWeatherInfo = (code: number) => {
@@ -44,7 +88,7 @@ export const useWeatherApi = () => {
       86: { condition: 'Heavy snow showers', icon: '❄️' },
       95: { condition: 'Thunderstorm', icon: '⛈️' },
       96: { condition: 'Thunderstorm with slight hail', icon: '⛈️' },
-      99: { condition: 'Thunderstorm with heavy hail', icon: '⛈️' }
+      99: { condition: 'Thunderstorm with heavy hail', icon: '⛈️' },
     }
     return iconMap[code] || { condition: 'Unknown', icon: '❓' }
   }
@@ -52,6 +96,6 @@ export const useWeatherApi = () => {
   return {
     getLocation,
     getWeather,
-    getWeatherInfo
+    getWeatherInfo,
   }
 }
