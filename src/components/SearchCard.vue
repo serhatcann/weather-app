@@ -7,17 +7,14 @@ const weatherStore = useWeatherStore()
 const searchLocation = ref('')
 const errorMessage = ref('')
 
-const addLocation = () =>
-{
+const addLocation = () => {
   if (!searchLocation.value.trim()) return
 
-  try
-  {
+  try {
     errorMessage.value = ''
     weatherStore.addWeather(searchLocation.value)
     searchLocation.value = ''
-  } catch (error)
-  {
+  } catch (error) {
     errorMessage.value = 'Failed to add location: ' + error || 'Unknown error'
   }
 }
@@ -25,17 +22,35 @@ const addLocation = () =>
 
 <template>
   <AppCard title="Search">
-    <div class="flex gap-4 items-start">
+    <form class="flex gap-4 items-start" @submit.prevent="addLocation">
       <div class="flex-1">
-        <input v-model="searchLocation" type="text" placeholder="Enter location"
+        <label for="location-input" class="sr-only">Location</label>
+        <input
+          id="location-input"
+          v-model="searchLocation"
+          type="text"
+          placeholder="Enter location"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          @keyup.enter="addLocation" />
-        <p v-if="errorMessage" class="text-red-500 text-sm mt-2">{{ errorMessage }}</p>
+          required
+        />
+        <p
+          v-if="errorMessage"
+          id="location-error"
+          class="text-red-500 text-sm mt-2"
+          role="alert"
+          aria-live="polite"
+        >
+          {{ errorMessage }}
+        </p>
       </div>
-      <button @click="addLocation"
-        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button
+        type="submit"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        :disabled="!searchLocation.trim()"
+        :class="{ 'opacity-50 cursor-not-allowed': !searchLocation.trim() }"
+      >
         Add Location
       </button>
-    </div>
+    </form>
   </AppCard>
 </template>

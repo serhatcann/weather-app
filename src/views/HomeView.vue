@@ -14,7 +14,11 @@ const weatherStore = useWeatherStore()
       <SearchCard />
     </div>
     <AppCard title="Results" v-if="weatherStore.weatherList.length > 0" class="flex flex-col gap-2">
-      <WeatherCard :weather="weather" v-for="weather of weatherStore.weatherList" :key="weather.id" />
+      <WeatherCard
+        :weather="weather"
+        v-for="weather of weatherStore.weatherList"
+        :key="weather.id"
+      />
     </AppCard>
   </AppLayout>
 </template>
