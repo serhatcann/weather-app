@@ -10,17 +10,17 @@ export const useWeatherStore = defineStore(
     const { fetchLocation, fetchWeathers } = useWeatherApi()
 
     const locationList = ref<Array<Location>>([])
-    const weatherList = computedAsync<Array<Weather>>(
-      async () => {
-        if (locationList.value.length === 0) return []
-        return await fetchWeathers(locationList.value)
-      },
-      [],
-    )
+    const weatherList = computedAsync<Array<Weather>>(async () => {
+      if (locationList.value.length === 0) return []
+      return await fetchWeathers(locationList.value)
+    }, [])
 
     const addWeather = async (location: string) => {
       try {
         const locationData = await fetchLocation(location)
+        if (locationList.value.find((location) => location.id === locationData.id)) {
+          return
+        }
         locationList.value.unshift({
           id: locationData.id,
           name: locationData.name,
@@ -33,7 +33,7 @@ export const useWeatherStore = defineStore(
     }
 
     const getWeatherByName = (name: string) => {
-      return weatherList.value.find((weather => weather.location === name))
+      return weatherList.value.find((weather) => weather.location === name)
     }
 
     const removeWeather = (id: number) => {

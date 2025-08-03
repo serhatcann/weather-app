@@ -30,8 +30,8 @@ const navigateToForecast = () => {
     >
       X
     </button>
-    <div class="flex items-center justify-center">
-      <div class="flex flex-1/2 flex-col gap-2">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-2">
         <p class="text-lg font-medium">{{ props.weather.condition }}</p>
         <p class="text-3xl font-bold">{{ props.weather.temperature }}°</p>
         <div class="flex gap-2 text-sm text-gray-600">
@@ -40,11 +40,7 @@ const navigateToForecast = () => {
           <span>Min: {{ props.weather.minTemp }}°</span>
         </div>
       </div>
-      <div class="flex-1/2 flex items-center justify-start">
-        <div class="rounded-lg flex items-center justify-center">
           <WeatherIcon :name="props.weather.icon" size="xl" />
-        </div>
-      </div>
     </div>
   </AppCard>
 </template>

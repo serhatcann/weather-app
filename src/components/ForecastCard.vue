@@ -19,8 +19,8 @@ const currentWeather = computed(() => {
   <AppCard :title="currentWeather?.location || 'Loading...'">
     <div v-if="currentWeather">
     <p class="text-lg">Today</p>
-    <div class="flex items-center justify-center">
-      <div class="flex flex-1/2 flex-col gap-2">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-2">
         <p class="text-lg font-medium">{{ currentWeather.condition }}</p>
         <p class="text-3xl font-bold">{{ currentWeather.temperature }}°</p>
         <div class="flex gap-2 text-sm text-gray-600">
@@ -29,11 +29,7 @@ const currentWeather = computed(() => {
           <span>Min: {{ currentWeather.minTemp }}°</span>
         </div>
       </div>
-      <div class="flex-1/2 flex items-center justify-end">
-        <div class="rounded-lg flex items-center justify-center">
           <WeatherIcon :name="currentWeather.icon" size="xl" />
-        </div>
-      </div>
     </div>
       <div v-if="currentWeather.forecast" class="border-t pt-2">
         <h3 class="text-sm font-semibold mb-2">5-Day Forecast</h3>
