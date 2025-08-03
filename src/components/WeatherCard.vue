@@ -3,8 +3,11 @@ import AppCard from './AppCard.vue'
 import WeatherIcon from './WeatherIcon.vue'
 import { type Weather } from '@/types/weather.interface'
 import { useWeatherStore } from '@/stores/weather'
+import { useRouter } from 'vue-router'
+import { FORECAST } from '@/router/route-paths'
 
 const weatherStore = useWeatherStore()
+const router = useRouter()
 
 const props = defineProps<{
   weather: Weather
@@ -13,12 +16,16 @@ const props = defineProps<{
 const removeWeather = () => {
   weatherStore.removeWeather(props.weather.id)
 }
+
+const navigateToForecast = () => {
+  router.push({ name: FORECAST.NAME, params: { zipcode: props.weather.location } })
+}
 </script>
 
 <template>
-  <AppCard :title="props.weather.location">
+  <AppCard :title="props.weather.location" class="cursor-pointer" @click="navigateToForecast">
     <button
-      @click="removeWeather"
+      @click.stop="removeWeather"
       class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl font-bold"
     >
       X

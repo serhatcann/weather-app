@@ -4,15 +4,9 @@ import AppCard from '@/components/AppCard.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
 import SearchCard from '@/components/SearchCard.vue'
 import { useWeatherStore } from '@/stores/weather'
-import { useWeatherApi } from '@/composables/useWeatherApi'
-import { onMounted } from 'vue'
 
 const weatherStore = useWeatherStore()
-const { getWeathers } = useWeatherApi()
 
-onMounted(async () => {
-  weatherStore.weatherList = await getWeathers(weatherStore.locationList)
-})
 </script>
 
 <template>
