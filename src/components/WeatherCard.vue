@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppCard from './AppCard.vue'
+import WeatherIcon from './WeatherIcon.vue'
 import { type Weather } from '@/types/weather.interface'
 import { useWeatherStore } from '@/stores/weather'
 
@@ -33,8 +34,8 @@ const removeWeather = () => {
         </div>
       </div>
       <div class="flex-1/2 flex items-center justify-start">
-        <div class="rounded-lg text-6xl flex items-center justify-center">
-          {{ props.weather.icon }}
+        <div class="rounded-lg flex items-center justify-center">
+          <WeatherIcon :name="props.weather.icon" />
         </div>
       </div>
     </div>

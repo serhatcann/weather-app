@@ -1,5 +1,3 @@
-import type { FunctionalComponent, SVGAttributes } from 'vue'
-
 export interface Weather {
   id: number
   location: string
@@ -7,7 +5,7 @@ export interface Weather {
   temperature: number
   maxTemp: number
   minTemp: number
-  icon: FunctionalComponent<SVGAttributes, Record<string, never>>
+  icon: string
 }
 
 export interface Location {
