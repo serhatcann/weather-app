@@ -33,7 +33,9 @@ const removeWeather = () => {
         </div>
       </div>
       <div class="flex-1/2 flex items-center justify-start">
-        <div class="w-32 h-32 bg-gray-200 rounded-lg" />
+        <div class="rounded-lg text-6xl flex items-center justify-center">
+          {{ props.weather.icon }}
+        </div>
       </div>
     </div>
   </AppCard>

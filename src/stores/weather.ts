@@ -14,7 +14,12 @@ export const useWeatherStore = defineStore(
     const addWeather = async (location: string) => {
       try {
         const locationData = await getLocation(location)
-        const weatherData = await getWeather({id: locationData.id ,name: locationData.name, latitude: locationData.latitude, longitude: locationData.longitude})
+        const weatherData = await getWeather({
+          id: locationData.id,
+          name: locationData.name,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+        })
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
         const newWeather: Weather = {
@@ -27,7 +32,12 @@ export const useWeatherStore = defineStore(
           icon: weatherInfo.icon,
         }
 
-        locationList.value.unshift({id: locationData.id, name: locationData.name, latitude: locationData.latitude, longitude: locationData.longitude})
+        locationList.value.unshift({
+          id: locationData.id,
+          name: locationData.name,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+        })
         weatherList.value.unshift(newWeather)
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : 'Failed to add weather')
@@ -47,6 +57,6 @@ export const useWeatherStore = defineStore(
     }
   },
   {
-    persist: {pick: ['locationList']},
+    persist: { pick: ['locationList'] },
   },
 )
