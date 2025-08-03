@@ -8,7 +8,6 @@ import { useRoute } from 'vue-router'
 const weatherStore = useWeatherStore()
 const route = useRoute()
 
-
 const currentWeather = computed(() => {
   return weatherStore.weatherList.find(weather => weather.location === route.params.zipcode)
 })

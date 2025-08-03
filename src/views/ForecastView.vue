@@ -4,7 +4,7 @@ import ForecastCard from '@/components/ForecastCard.vue'
 </script>
 
 <template>
-  <AppLayout title="Weather Forecast">
+  <AppLayout title="Weather Forecast" show-nav>
     <ForecastCard />
   </AppLayout>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string
+  showNav?: boolean
 }>()
 </script>
 
@@ -12,6 +13,9 @@ const props = defineProps<{
           <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">
             {{ props.title }}
           </h1>
+          <RouterLink v-if="showNav" to="/" class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+            Go to Home
+          </RouterLink>
         </div>
       </div>
     </header>
