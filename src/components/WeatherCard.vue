@@ -42,7 +42,7 @@ const navigateToForecast = () => {
       </div>
       <div class="flex-1/2 flex items-center justify-start">
         <div class="rounded-lg flex items-center justify-center">
-          <WeatherIcon :name="props.weather.icon" />
+          <WeatherIcon :name="props.weather.icon" size="xl" />
         </div>
       </div>
     </div>

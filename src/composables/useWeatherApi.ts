@@ -1,4 +1,4 @@
-import type { Location, Weather } from '@/types/weather.interface'
+import type { Location, Weather, DailyForecast } from '@/types/weather.interface'
 
 export const useWeatherApi = () => {
   const fetchLocation = async (location: string) => {
@@ -37,7 +37,7 @@ export const useWeatherApi = () => {
   const fetchWeather = async (location: Location) => {
     try {
       const response = await fetch(
-        `https://api.open-meteo.com/v1/dwd-icon?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`,
+        `https://api.open-meteo.com/v1/dwd-icon?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=7`,
       )
 
       if (!response.ok) {
@@ -73,6 +73,17 @@ export const useWeatherApi = () => {
         const weatherData = await fetchWeather(location)
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
+        const forecast: DailyForecast[] = weatherData.daily.time.slice(1, 6).map((date: string, index: number) => {
+          const dayWeatherInfo = getWeatherInfo(weatherData.daily.weather_code[index + 1])
+          return {
+            date,
+            maxTemp: Math.round(weatherData.daily.temperature_2m_max[index + 1]),
+            minTemp: Math.round(weatherData.daily.temperature_2m_min[index + 1]),
+            condition: dayWeatherInfo.condition,
+            icon: dayWeatherInfo.icon,
+          }
+        })
+
         const newWeather: Weather = {
           id: location.id,
           location: location.name,
@@ -81,6 +92,7 @@ export const useWeatherApi = () => {
           maxTemp: Math.round(weatherData.daily.temperature_2m_max[0]),
           minTemp: Math.round(weatherData.daily.temperature_2m_min[0]),
           icon: weatherInfo.icon,
+          forecast,
         }
         return newWeather
       } catch (error) {
@@ -136,7 +148,6 @@ export const useWeatherApi = () => {
 
   return {
     fetchLocation,
-    fetchWeather,
     getWeatherInfo,
     fetchWeathers,
   }

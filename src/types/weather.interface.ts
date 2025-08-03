@@ -6,6 +6,15 @@ export interface Weather {
   maxTemp: number
   minTemp: number
   icon: string
+  forecast?: DailyForecast[]
+}
+
+export interface DailyForecast {
+  date: string
+  maxTemp: number
+  minTemp: number
+  condition: string
+  icon: string
 }
 
 export interface Location {
