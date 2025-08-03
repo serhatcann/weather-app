@@ -23,7 +23,7 @@ export const useWeatherStore = defineStore(
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
         const newWeather: Weather = {
-          id: Date.now(),
+          id: locationData.id,
           location: locationData.name,
           temperature: Math.round(weatherData.current.temperature_2m),
           condition: weatherInfo.condition,
@@ -45,8 +45,11 @@ export const useWeatherStore = defineStore(
     }
 
     const removeWeather = (id: number) => {
-      const index = locationList.value.findIndex((weather) => weather.id === id)
-      if (index > -1) locationList.value.splice(index, 1)
+      const index = locationList.value.findIndex((location) => location.id === id)
+      if (index > -1) {
+        locationList.value.splice(index, 1)
+        weatherList.value.splice(index, 1)
+      }
     }
 
     return {

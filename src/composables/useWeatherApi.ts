@@ -108,7 +108,7 @@ export const useWeatherApi = () => {
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
         const newWeather: Weather = {
-          id: weatherData.id,
+          id: location.id,
           location: location.name,
           temperature: Math.round(weatherData.current.temperature_2m),
           condition: weatherInfo.condition,
