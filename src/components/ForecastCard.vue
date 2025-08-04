@@ -9,6 +9,7 @@ import { useWeatherApi } from "@/composables/useWeatherApi";
 
 const route = useRoute()
 const currentWeather = ref<Weather>()
+const isLoading = ref(false)
 const { fetchLocation, fetchWeathers } = useWeatherApi()
 
 onMounted(async () =>
@@ -16,15 +17,22 @@ onMounted(async () =>
   const zipcode = route.params.zipcode as string
   if (zipcode)
   {
-    if (route.meta.isDirectNavigation)
+    try
     {
-      const locationData = await fetchLocation(zipcode)
-      const weatherData = await fetchWeathers([locationData])
-      currentWeather.value = weatherData[0]
-    } else
+      isLoading.value = true
+      if (route.meta.isDirectNavigation)
+      {
+        const locationData = await fetchLocation(zipcode)
+        const weatherData = await fetchWeathers([locationData])
+        currentWeather.value = weatherData[0]
+      } else
+      {
+        const weatherStore = useWeatherStore()
+        currentWeather.value = weatherStore.weatherList.find(weather => weather.location === route.params.zipcode)
+      }
+    } finally
     {
-      const weatherStore = useWeatherStore()
-      currentWeather.value = weatherStore.weatherList.find(weather => weather.location === route.params.zipcode)
+      isLoading.value = false
     }
   }
 })
@@ -32,7 +40,7 @@ onMounted(async () =>
 </script>
 
 <template>
-  <AppCard :title="currentWeather?.location || 'Loading...'">
+  <AppCard :title="currentWeather?.location" :loading="isLoading">
     <div v-if="currentWeather">
       <p class="text-lg">Today</p>
       <div class="flex items-center justify-between">
