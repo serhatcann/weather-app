@@ -2,45 +2,34 @@
 import AppCard from './AppCard.vue'
 import WeatherIcon from './WeatherIcon.vue'
 import { useWeatherStore } from '@/stores/weather'
-import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Weather } from '@/types/weather.interface'
-import { useWeatherApi } from "@/composables/useWeatherApi";
+import { useWeatherApi } from '@/composables/useWeatherApi'
+import { ref, onMounted } from 'vue'
 
 const route = useRoute()
-const currentWeather = ref<Weather>()
-const isLoading = ref(false)
 const { fetchLocation, fetchWeathers } = useWeatherApi()
+const weatherStore = useWeatherStore()
+const currentWeather = ref<Weather>()
 
-onMounted(async () =>
-{
+onMounted(async () => {
   const zipcode = route.params.zipcode as string
-  if (zipcode)
-  {
-    try
-    {
-      isLoading.value = true
-      if (route.meta.isDirectNavigation)
-      {
-        const locationData = await fetchLocation(zipcode)
-        const weatherData = await fetchWeathers([locationData])
-        currentWeather.value = weatherData[0]
-      } else
-      {
-        const weatherStore = useWeatherStore()
-        currentWeather.value = weatherStore.weatherList.find(weather => weather.location === route.params.zipcode)
-      }
-    } finally
-    {
-      isLoading.value = false
+  if (zipcode) {
+    if (route.meta.isDirectNavigation) {
+      const locationData = await fetchLocation(zipcode)
+      const weatherData = await fetchWeathers([locationData])
+      currentWeather.value = weatherData[0]
+    } else {
+      currentWeather.value = weatherStore.weatherList.find(
+        (weather) => weather.location === zipcode,
+      )
     }
   }
 })
-
 </script>
 
 <template>
-  <AppCard :title="currentWeather?.location" :loading="isLoading">
+  <AppCard :title="currentWeather?.location">
     <div v-if="currentWeather">
       <p class="text-lg">Today</p>
       <div class="flex items-center justify-between">
@@ -58,13 +47,22 @@ onMounted(async () =>
       <div v-if="currentWeather.forecast" class="border-t pt-2">
         <h3 class="text-sm font-semibold mb-2">5-Day Forecast</h3>
         <div class="space-y-1">
-          <div v-for="day in currentWeather.forecast" :key="day.date"
-            class="flex items-center justify-between py-1 border-b border-gray-100 last:border-b-0">
+          <div
+            v-for="day in currentWeather.forecast"
+            :key="day.date"
+            class="flex items-center justify-between py-1 border-b border-gray-100 last:border-b-0"
+          >
             <div class="flex items-center gap-2">
               <WeatherIcon :name="day.icon" size="sm" />
               <div>
                 <p class="text-xs font-medium">
-                  {{ new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) }}
+                  {{
+                    new Date(day.date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric',
+                    })
+                  }}
                 </p>
                 <p class="text-xs text-gray-600">{{ day.condition }}</p>
               </div>
@@ -79,7 +77,7 @@ onMounted(async () =>
       </div>
     </div>
     <div v-else class="flex items-center justify-center p-4">
-      <p class="text-gray-500 text-sm">Loading weather data...</p>
+      <p class="text-gray-500 text-sm">No weather data available</p>
     </div>
   </AppCard>
 </template>

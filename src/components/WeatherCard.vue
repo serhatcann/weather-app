@@ -42,7 +42,7 @@ const navigateToForecast = () => {
           <span>Min: {{ props.weather.minTemp }}°</span>
         </div>
       </div>
-          <WeatherIcon :name="props.weather.icon" size="xl" />
+      <WeatherIcon :name="props.weather.icon" size="xl" />
     </div>
   </AppCard>
 </template>

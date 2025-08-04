@@ -67,22 +67,24 @@ export const useWeatherApi = () => {
     }
   }
 
-    const fetchWeathers = async (locations: Array<Location>) => {
+  const fetchWeathers = async (locations: Array<Location>) => {
     const weathers = locations.map(async (location: Location) => {
       try {
         const weatherData = await fetchWeather(location)
         const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
-        const forecast: DailyForecast[] = weatherData.daily.time.slice(1, 6).map((date: string, index: number) => {
-          const dayWeatherInfo = getWeatherInfo(weatherData.daily.weather_code[index + 1])
-          return {
-            date,
-            maxTemp: Math.round(weatherData.daily.temperature_2m_max[index + 1]),
-            minTemp: Math.round(weatherData.daily.temperature_2m_min[index + 1]),
-            condition: dayWeatherInfo.condition,
-            icon: dayWeatherInfo.icon,
-          }
-        })
+        const forecast: DailyForecast[] = weatherData.daily.time
+          .slice(1, 6)
+          .map((date: string, index: number) => {
+            const dayWeatherInfo = getWeatherInfo(weatherData.daily.weather_code[index + 1])
+            return {
+              date,
+              maxTemp: Math.round(weatherData.daily.temperature_2m_max[index + 1]),
+              minTemp: Math.round(weatherData.daily.temperature_2m_min[index + 1]),
+              condition: dayWeatherInfo.condition,
+              icon: dayWeatherInfo.icon,
+            }
+          })
 
         const newWeather: Weather = {
           id: location.id,
