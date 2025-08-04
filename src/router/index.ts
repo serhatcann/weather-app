@@ -14,6 +14,9 @@ const router = createRouter({
       name: FORECAST.NAME,
       path: FORECAST.PATH,
       component: () => import('../views/ForecastView.vue'),
+      beforeEnter: (to, from) => {
+        to.meta.isDirectNavigation = from.name === undefined
+      },
     },
     {
       path: '/:pathMatch(.*)*',
