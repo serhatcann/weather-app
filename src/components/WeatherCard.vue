@@ -9,9 +9,11 @@ import { FORECAST } from '@/router/route-paths'
 const weatherStore = useWeatherStore()
 const router = useRouter()
 
-const props = defineProps<{
+interface Props {
   weather: Weather
-}>()
+}
+
+const props = defineProps<Props>()
 
 const removeWeather = () => {
   weatherStore.removeWeather(props.weather.id)

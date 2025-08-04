@@ -1,8 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{
+interface Props {
   title?: string
   loading?: boolean
-}>()
+}
+
+const props = defineProps<Props>()
 </script>
 
 <template>

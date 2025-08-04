@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from 'vue'
 
-const props = defineProps<{
+interface Props {
   name: string
-  size: "sm" | "md" | "lg" | "xl"
-}>()
+  size: 'sm' | 'md' | 'lg' | 'xl'
+}
+
+const props = defineProps<Props>()
 
 const AsyncComponent = defineAsyncComponent(
   () => import(`@/assets/icons/${props.name}.svg?component`),
