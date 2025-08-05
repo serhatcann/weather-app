@@ -1,18 +1,36 @@
-# weather-app
+# Weather App
 
-This template should help get you started developing with Vue 3 in Vite.
+A weather application built with Vue 3, TypeScript, TailwindCSS, Vite and Open Meteo API. Get current weather conditions and 5-day forecasts for any location worldwide.
+
+## Features
+
+- 🌤️ Current weather conditions with temperature and weather icons
+- 📅 5-day weather forecast
+- 🔍 Search locations by city name
+- 💾 Persistent location storage
+- 📱 Responsive design
+- ⚡ Fast and lightweight
+
+## How to Use
+
+1. Enter a city name in the search box
+2. Click "Add Location" to get weather data
+3. Click on any weather card to view detailed 5-day forecast
+4. Remove locations by clicking the remove button
+
+## Tech Stack
+
+- **Vue 3** with Composition API
+- **TypeScript** for type safety
+- **Vite** for fast development
+- **Pinia** for state management
+- **Vue Router** for navigation
+- **Tailwind CSS** for styling
+- **Open-Meteo API** for weather data
 
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Project Setup
 
@@ -26,7 +44,7 @@ pnpm install
 pnpm dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Compile and Build for Production
 
 ```sh
 pnpm build
