@@ -11,6 +11,9 @@ export const useWeatherApi = () => {
         if (response.status === 400) {
           throw new Error('Invalid location name')
         }
+        if (response.status === 429) {
+          throw new Error('Too many requests. Please try again later')
+        }
         if (response.status >= 500) {
           throw new Error('Geocoding service temporarily unavailable')
         }
@@ -19,17 +22,15 @@ export const useWeatherApi = () => {
 
       const data = await response.json()
 
-      if (data.error) {
-        throw new Error(data.reason || 'Geocoding API error')
-      }
-
       if (!data.results?.length) {
         throw new Error('Location not found')
       }
 
       return data.results[0]
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) {
+        throw error
+      }
       throw new Error('Failed to fetch location data')
     }
   }
@@ -37,12 +38,15 @@ export const useWeatherApi = () => {
   const fetchWeather = async (location: Location) => {
     try {
       const response = await fetch(
-        `https://api.open-meteo.com/v1/dwd-icon?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=6`,
+        `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=6`,
       )
 
       if (!response.ok) {
         if (response.status === 400) {
           throw new Error('Invalid coordinates provided')
+        }
+        if (response.status === 429) {
+          throw new Error('Too many requests. Please try again later')
         }
         if (response.status >= 500) {
           throw new Error('Weather service temporarily unavailable')
@@ -52,63 +56,48 @@ export const useWeatherApi = () => {
 
       const data = await response.json()
 
-      if (data.error) {
-        throw new Error(data.reason || 'Weather API error')
-      }
-
       if (!data.current || !data.daily) {
         throw new Error('Incomplete weather data received')
       }
 
       return data
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) {
+        throw error
+      }
       throw new Error('Failed to fetch weather data')
     }
   }
 
   const fetchWeathers = async (locations: Array<Location>) => {
     const weathers = locations.map(async (location: Location) => {
-      try {
-        const weatherData = await fetchWeather(location)
-        const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
+      const weatherData = await fetchWeather(location)
+      const weatherInfo = getWeatherInfo(weatherData.current.weather_code)
 
-        const forecast: DailyForecast[] = weatherData.daily.time
-          .slice(1, 6)
-          .map((date: string, index: number) => {
-            const dayWeatherInfo = getWeatherInfo(weatherData.daily.weather_code[index + 1])
-            return {
-              date,
-              maxTemp: Math.round(weatherData.daily.temperature_2m_max[index + 1]),
-              minTemp: Math.round(weatherData.daily.temperature_2m_min[index + 1]),
-              condition: dayWeatherInfo.condition,
-              icon: dayWeatherInfo.icon,
-            }
-          })
+      const forecast: DailyForecast[] = weatherData.daily.time
+        .slice(1, 6)
+        .map((date: string, index: number) => {
+          const dayWeatherInfo = getWeatherInfo(weatherData.daily.weather_code[index + 1])
+          return {
+            date,
+            maxTemp: Math.round(weatherData.daily.temperature_2m_max[index + 1]),
+            minTemp: Math.round(weatherData.daily.temperature_2m_min[index + 1]),
+            condition: dayWeatherInfo.condition,
+            icon: dayWeatherInfo.icon,
+          }
+        })
 
-        const newWeather: Weather = {
-          id: location.id,
-          location: location.name,
-          temperature: Math.round(weatherData.current.temperature_2m),
-          condition: weatherInfo.condition,
-          maxTemp: Math.round(weatherData.daily.temperature_2m_max[0]),
-          minTemp: Math.round(weatherData.daily.temperature_2m_min[0]),
-          icon: weatherInfo.icon,
-          forecast,
-        }
-        return newWeather
-      } catch (error) {
-        console.log(error)
-        return {
-          id: location.id,
-          location: location.name,
-          temperature: 0,
-          condition: "Couldn't fetch the weather data",
-          maxTemp: 0,
-          minTemp: 0,
-          icon: 'not-available',
-        }
+      const newWeather: Weather = {
+        id: location.id,
+        location: location.name,
+        temperature: Math.round(weatherData.current.temperature_2m),
+        condition: weatherInfo.condition,
+        maxTemp: Math.round(weatherData.daily.temperature_2m_max[0]),
+        minTemp: Math.round(weatherData.daily.temperature_2m_min[0]),
+        icon: weatherInfo.icon,
+        forecast,
       }
+      return newWeather
     })
     const results = await Promise.all(weathers)
     return results
